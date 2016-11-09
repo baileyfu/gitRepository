@@ -1,5 +1,0 @@
-HelloWorld
-first change...
-Git has a mutable index called stage
-Modify
-Again
