@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      /WEB-INF/spring-*.xml
+    </param-value>
+  </context-param>
+  
+  <filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+  </filter>
+  <filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 一个代理模式的应用,可以把servlet 容器中的filter同spring容器中的bean关联起来 -->
+  <!-- DelegatingFilterProxy的一个初始化参数：targetFilterLifecycle ,其默认值为false 。 但如果被其代理的filter的init()方法和destry()方法需要被调用时，需要设置targetFilterLifecycle为true -->
+  <filter>  
+      <filter-name>springSecurityFilterChain</filter-name>  
+      <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+      <init-param>
+        <param-name>targetFilterLifecycle</param-name>
+        <!-- 默认是false -->
+        <param-value>true</param-value>
+      </init-param>  
+  </filter>
+  <filter-mapping>  
+    <filter-name>springSecurityFilterChain</filter-name>  
+    <url-pattern>/*</url-pattern>  
+  </filter-mapping>
+
+  <!-- 用于在Cas Client应用中的Session过期时将其从对应的映射关系中移除 -->
+  <listener>
+      <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>  
+  </listener>  
+  <listener>  
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+  </listener>  
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
